@@ -1,5 +1,6 @@
 package com.example.ToDoRandomizer.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,10 +12,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profile {
+public class User {
     @Id
+    @Column(name="user_id")
     @GeneratedValue
-    private int id;
+    private Integer id;
     private Calendar calendar;
     private ExpectedTime attentionSpan;
 }

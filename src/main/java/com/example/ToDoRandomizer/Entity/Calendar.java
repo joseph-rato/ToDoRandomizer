@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 public class Calendar {
     @Id
     @GeneratedValue
-    private int id;
-    private Profile profile;
+    private Integer id;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User user;
 }

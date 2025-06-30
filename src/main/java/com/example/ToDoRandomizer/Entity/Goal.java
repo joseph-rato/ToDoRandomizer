@@ -8,8 +8,8 @@ import java.time.Duration;
 public class Goal {
     @Id
     @GeneratedValue
-    private int id;
-    private Profile profile;
+    private Integer id;
+    private User user;
     private Calendar calendar;
     private LinkedTask currentLinkTask;
     private LinkedTask lastLinkedTask;

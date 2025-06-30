@@ -16,7 +16,7 @@ import java.time.Duration;
 public class ExpectedTime {
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     private Duration userAssumed;
     private Duration taskAverage;
     private Boolean useCalculatedAverage;
