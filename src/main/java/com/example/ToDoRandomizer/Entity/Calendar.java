@@ -14,8 +14,7 @@ public class Calendar {
     @Column(name="calendar_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "calendar")
     private CalendarUser calendarUser;
     private String name;
     private String description;
