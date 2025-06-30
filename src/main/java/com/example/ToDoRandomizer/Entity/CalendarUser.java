@@ -1,9 +1,6 @@
 package com.example.ToDoRandomizer.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +9,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class CalendarUser {
     @Id
     @Column(name="user_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @OneToOne(mappedBy = "calendarUser")
     private Calendar calendar;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "expectedTime_id")
     private ExpectedTime attentionSpan;
 }

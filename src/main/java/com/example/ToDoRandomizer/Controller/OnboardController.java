@@ -1,6 +1,6 @@
 package com.example.ToDoRandomizer.Controller;
 
-import com.example.ToDoRandomizer.Entity.User;
+import com.example.ToDoRandomizer.Entity.CalendarUser;
 import com.example.ToDoRandomizer.Service.OnboardingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +21,9 @@ public class OnboardController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity addUser(@RequestBody User user){
-        User newUser = onboardingService.addUser(user);
-        return ResponseEntity.ok(newUser);
+    public ResponseEntity addUser(@RequestBody CalendarUser calendarUser){
+        CalendarUser newCalendarUser = onboardingService.addCalendarUser(calendarUser);
+        return ResponseEntity.ok(newCalendarUser);
     };
 
 

@@ -1,8 +1,6 @@
 package com.example.ToDoRandomizer.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +19,13 @@ import java.time.Instant;
 @AllArgsConstructor
 public class Task {
     @Id
-    @GeneratedValue
+    @Column(name="task_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Instant startTime;
     private Instant endTime;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "expectedTime_id")
     private ExpectedTime expectedTime;
     private Duration actualTime;
     private Duration currentTime;

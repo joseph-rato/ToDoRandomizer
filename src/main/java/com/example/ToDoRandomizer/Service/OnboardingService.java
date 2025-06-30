@@ -1,6 +1,6 @@
 package com.example.ToDoRandomizer.Service;
 
-import com.example.ToDoRandomizer.Entity.User;
+import com.example.ToDoRandomizer.Entity.CalendarUser;
 import com.example.ToDoRandomizer.Repository.OnboardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ public class OnboardingService {
     @Autowired
     OnboardRepository onboardRepository;
 
-    public User addUser(User user) {
-        return onboardRepository.save(user);
+    public CalendarUser addCalendarUser(CalendarUser calendarUser) {
+        return onboardRepository.save(calendarUser);
     }
 }

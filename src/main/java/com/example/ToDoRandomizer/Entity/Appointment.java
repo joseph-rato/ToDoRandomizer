@@ -1,8 +1,6 @@
 package com.example.ToDoRandomizer.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class Appointment extends Task {
     private boolean alert;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "calendar_id")
     private Calendar calendar;
-    private Optional<Goal> goal;
 }
