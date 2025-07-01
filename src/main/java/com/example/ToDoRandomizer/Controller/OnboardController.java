@@ -1,6 +1,7 @@
 package com.example.ToDoRandomizer.Controller;
 
 import com.example.ToDoRandomizer.Entity.CalendarUser;
+import com.example.ToDoRandomizer.Service.AlreadyExistsError;
 import com.example.ToDoRandomizer.Service.OnboardingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,10 @@ public class OnboardController {
         return ResponseEntity.ok(newCalendarUser);
     };
 
+    @PostMapping("/updateUser")
+    public ResponseEntity updateUser(@RequestBody CalendarUser calendarUser) throws AlreadyExistsError {
+        CalendarUser updatedCalendarUser = onboardingService.updateCalendarUser(calendarUser);
+        return ResponseEntity.ok(updatedCalendarUser);
+    };
 
 }
