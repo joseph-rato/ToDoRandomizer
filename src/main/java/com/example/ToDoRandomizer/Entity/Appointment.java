@@ -12,8 +12,13 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Appointment extends Task {
-    private boolean alert;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "calendar_id")
+    @Id
+    @Column(name="appointment_id")
+    @GeneratedValue
+    private Integer id;
+    private Boolean alert;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "calendar_id", nullable = false) // Define the foreign key column name
     private Calendar calendar;
+    private Boolean specificEvent;
 }

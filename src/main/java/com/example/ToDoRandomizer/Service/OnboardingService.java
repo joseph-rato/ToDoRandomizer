@@ -1,5 +1,6 @@
 package com.example.ToDoRandomizer.Service;
 
+import com.example.ToDoRandomizer.Exceptions.AlreadyExistsError;
 import com.example.ToDoRandomizer.Entity.CalendarUser;
 import com.example.ToDoRandomizer.Repository.OnboardRepository;
 import jakarta.persistence.EntityNotFoundException;

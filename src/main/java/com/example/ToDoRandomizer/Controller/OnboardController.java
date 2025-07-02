@@ -1,7 +1,7 @@
 package com.example.ToDoRandomizer.Controller;
 
 import com.example.ToDoRandomizer.Entity.CalendarUser;
-import com.example.ToDoRandomizer.Service.AlreadyExistsError;
+import com.example.ToDoRandomizer.Exceptions.AlreadyExistsError;
 import com.example.ToDoRandomizer.Service.OnboardingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
