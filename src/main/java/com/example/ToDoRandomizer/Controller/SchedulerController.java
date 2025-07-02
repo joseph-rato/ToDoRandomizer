@@ -2,7 +2,6 @@ package com.example.ToDoRandomizer.Controller;
 
 import com.example.ToDoRandomizer.Entity.Appointment;
 import com.example.ToDoRandomizer.Entity.Calendar;
-import com.example.ToDoRandomizer.Entity.Task;
 import com.example.ToDoRandomizer.Service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,7 @@ public class SchedulerController {
         return ResponseEntity.ok(newCalendar);
     }
 
-//    might need dto depending if we can provide an id for calendar
+//    might need dto depending on if we can provide an id for calendar
     @PostMapping("/createAppointment")
     public ResponseEntity addAppointment(@RequestBody Appointment appointment){
         Appointment newAppointment= schedulerService.addAppointment(appointment);
