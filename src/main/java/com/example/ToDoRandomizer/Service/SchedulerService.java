@@ -1,9 +1,7 @@
 package com.example.ToDoRandomizer.Service;
 
-import com.example.ToDoRandomizer.DataTransferObjects.NewAppointment;
 import com.example.ToDoRandomizer.Entity.Appointment;
 import com.example.ToDoRandomizer.Entity.Calendar;
-import com.example.ToDoRandomizer.Entity.Task;
 import com.example.ToDoRandomizer.Repository.SchedulerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

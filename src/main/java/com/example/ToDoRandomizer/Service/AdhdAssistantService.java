@@ -3,13 +3,15 @@ package com.example.ToDoRandomizer.Service;
 import com.example.ToDoRandomizer.Entity.CalendarUser;
 import com.example.ToDoRandomizer.Entity.Goal;
 import com.example.ToDoRandomizer.Entity.Task;
-import com.example.ToDoRandomizer.Repository.AdhdAssistantRepository;
+import com.example.ToDoRandomizer.Repository.CalendarUserRepository;
 import com.example.ToDoRandomizer.Repository.GoalRepository;
 import com.example.ToDoRandomizer.Repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -18,7 +20,7 @@ import java.util.Random;
 public class AdhdAssistantService {
 
     @Autowired
-    private AdhdAssistantRepository adhdAssistantRepository;
+    private CalendarUserRepository calendarUserRepository;
     
     @Autowired
     private GoalRepository goalRepository;
@@ -27,7 +29,7 @@ public class AdhdAssistantService {
     private TaskRepository taskRepository;
 
     public CalendarUser getSchedule(Integer id) {
-        return adhdAssistantRepository.findById(id)
+        return calendarUserRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
@@ -37,7 +39,7 @@ public class AdhdAssistantService {
     }
 
     @Transactional
-    public List<Task> getRandomTask(Integer id) {
+    public Task setRandomTaskToInProgress(Integer id) {
         List<Task> currentTasks = goalRepository.findAllCurrentTasksByUserId(id);
         if (currentTasks.isEmpty()) {
             throw new RuntimeException("No current tasks found for user: " + id);
@@ -47,10 +49,8 @@ public class AdhdAssistantService {
         int randomIndex = random.nextInt(currentTasks.size());
         Task randomTask = currentTasks.get(randomIndex);
         // need to set random task to current task
-        goalRepository.setCurrentTask(id, randomTask.getId());
-        randomTask.setActiveTask(true);
-        taskRepository.save(randomTask);
-        return currentTasks;
+        Task savedTask = setTaskToInProgress(randomTask);
+        return savedTask;
     }
 
     public List<Goal> getGoals(Integer userId) {
@@ -63,18 +63,15 @@ public class AdhdAssistantService {
         return goalRepository.save(goal);
     }
 
+    // TODO: NEED TO HAVE METHOD THAT corrects goals to being correct. after save, after update
+    // TODO: this method for manipulating goal should also have ways to update goal with correct times etc 
+
+    // might need two methods but for sure for setting new random task to in progress
+
     @Transactional
-    public Task setCurrentTask(Integer userId, Integer newTaskId) {
-        // Find the current active task ID for the user
-        Optional<Integer> currentTaskId = goalRepository.findCurrentTaskIdByUserId(userId);
-        
-        if (currentTaskId.isPresent()) {
-            // Get the current task and mark it as not active (completed)
-            Task currentTask = taskRepository.findById(currentTaskId.get())
-                    .orElseThrow(() -> new RuntimeException("Current task not found"));
-            currentTask.setActiveTask(false);
-            taskRepository.save(currentTask);
-        }
+    public Task setNewTaskToInProgress(Integer userId, Integer newTaskId) {
+        Task currentTask = getCurrentTask(userId);
+        setTaskToNotInProgress(currentTask);
         
         // Verify the new task exists
         Task newTask = taskRepository.findById(newTaskId)
@@ -84,11 +81,42 @@ public class AdhdAssistantService {
         goalRepository.setCurrentTask(userId, newTaskId);
         
         // Mark the new task as active (not completed)
-        newTask.setActiveTask(true);
-        taskRepository.save(newTask);
+        Task savedTask = setTaskToInProgress(newTask);
         
-        return newTask;
+        return savedTask;
     }
 
-    
+    private Duration calculateCurrentTime(Task task) {
+        Duration currentTotalTime=task.getCurrentTime();
+        return currentTotalTime.plus(Duration.between(task.getCurrentTimeStart(), Instant.now()));
+    }
+
+    public Task setTaskCompleted(Integer userId, Integer taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
+        task.setEndTime(Instant.now());
+        Duration totalTime = calculateCurrentTime(task);
+        task.setCurrentTime(totalTime);
+        task.setActualTime(totalTime);
+        task.setActiveTask(false);
+        task.setCompleted(true);
+        task.setEndTime(Instant.now());
+        taskRepository.save(task);
+        return task;
+    }
+
+    public Task setTaskToInProgress(Task task) {
+        task.setActiveTask(true);
+        task.setCurrentTimeStart(Instant.now());
+        taskRepository.save(task);
+        return task;
+    }
+
+    public Task setTaskToNotInProgress(Task task) {
+        task.setActiveTask(false);
+        task.setCurrentTime(calculateCurrentTime(task));
+        task.setCurrentTimeStart(null);
+        taskRepository.save(task);
+        return task;
+    }
 }
