@@ -30,6 +30,7 @@ public class Task {
     private Duration actualTime;
     private Duration currentTime;
     private String description;
+    private Boolean activeTask;
     private Boolean completed;
     private String Notes;
 }
