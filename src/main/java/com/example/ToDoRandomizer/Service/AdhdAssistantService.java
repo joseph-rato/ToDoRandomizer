@@ -58,13 +58,30 @@ public class AdhdAssistantService {
         return goalRepository.findGoalsByUserId(userId);
     }
 
+    public Goal getCurrentGoal(Integer userId) {
+        Goal currentGoal = goalRepository.findCurrentGoalByUserId(userId);
+        return currentGoal;
+    }
+
     public Goal setGoal(Goal goal) {
         // need to set current goal to inactive and then set new goal to active
         return goalRepository.save(goal);
     }
 
-    // TODO: NEED TO HAVE METHOD THAT corrects goals to being correct. after save, after update
-    // TODO: this method for manipulating goal should also have ways to update goal with correct times etc 
+    // TODO: Need method that closes a goal when a goal is completed aka last task is finished
+    
+    public Task startRandomTask(Integer userId) {
+        Goal currentGoal = getCurrentGoal(userId);
+        pauseCurrentGoal(currentGoal);
+        return setRandomTaskToInProgress(userId);
+    }
+
+    // should probably follow cqrs pattern here
+    public void pauseCurrentGoal(Goal goal) {
+        goal.setActualDuration(calculateCurrentTime(goal.getActualDuration(), goal.getCurrentLinkTask().getTask().getStartTime()));
+        goalRepository.save(goal);
+    }
+
 
     // might need two methods but for sure for setting new random task to in progress
 
@@ -86,16 +103,15 @@ public class AdhdAssistantService {
         return savedTask;
     }
 
-    private Duration calculateCurrentTime(Task task) {
-        Duration currentTotalTime=task.getCurrentTime();
-        return currentTotalTime.plus(Duration.between(task.getCurrentTimeStart(), Instant.now()));
+    private Duration calculateCurrentTime(Duration currentTime, Instant currentStartTime) {
+        return currentTime.plus(Duration.between(currentStartTime, Instant.now()));
     }
 
     public Task setTaskCompleted(Integer userId, Integer taskId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskId));
         task.setEndTime(Instant.now());
-        Duration totalTime = calculateCurrentTime(task);
+        Duration totalTime = calculateCurrentTime(task.getCurrentTime(), task.getCurrentTimeStart());
         task.setCurrentTime(totalTime);
         task.setActualTime(totalTime);
         task.setActiveTask(false);
@@ -114,7 +130,7 @@ public class AdhdAssistantService {
 
     public Task setTaskToNotInProgress(Task task) {
         task.setActiveTask(false);
-        task.setCurrentTime(calculateCurrentTime(task));
+        task.setCurrentTime(calculateCurrentTime(task.getCurrentTime(), task.getCurrentTimeStart()));
         task.setCurrentTimeStart(null);
         taskRepository.save(task);
         return task;

@@ -21,8 +21,7 @@ public class ManifestorService {
         return manifestorRepository.save(goal);
     }
 
-    // TODO: link this task to the correct goal
-    public Task linkTaskToGoal(Task task, Goal goal) {
+    public Task createNewTaskForGoal(Task task, Goal goal) {
         Task newTask  = addTask(task);
         LinkedTask lastLinkedTask = goal.getLastLinkedTask();
         LinkedTask newLastLinkedTask = generateLastLinkedTask(newTask, lastLinkedTask);
@@ -31,7 +30,7 @@ public class ManifestorService {
         return task;
     }
 
-    LinkedTask generateLastLinkedTask(Task task, LinkedTask previousLastTask) {
+    private LinkedTask generateLastLinkedTask(Task task, LinkedTask previousLastTask) {
         LinkedTask linkedTask = new LinkedTask();
         linkedTask.setTask(task);
         linkedTask.setNextTask(null);

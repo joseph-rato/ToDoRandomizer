@@ -26,4 +26,7 @@ public interface GoalRepository extends JpaRepository<Goal, Integer> {
     @Transactional
     @Query("UPDATE Goal g SET g.currentLinkTask.id = :newTaskId WHERE g.calendarUser.id = :userId")
     void setCurrentTask(@Param("userId") Integer userId, @Param("newTaskId") Integer newTaskId);
+
+    @Query("SELECT g FROM Task t JOIN LinkedTask lt ON t.id = lt.task.id JOIN Goal g ON lt.id = g.currentLinkTask.id WHERE g.calendarUser.id = :userId AND t.activeTask = true")
+    Goal findCurrentGoalByUserId(@Param("userId") Integer userId);
 } 
