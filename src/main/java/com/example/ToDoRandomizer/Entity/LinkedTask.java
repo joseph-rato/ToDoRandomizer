@@ -1,7 +1,14 @@
 package com.example.ToDoRandomizer.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class LinkedTask {
     @Id
     @Column(name="linkedTask_id")

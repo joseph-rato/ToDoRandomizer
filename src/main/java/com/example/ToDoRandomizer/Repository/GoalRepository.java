@@ -16,18 +16,12 @@ public interface GoalRepository extends JpaRepository<Goal, Integer> {
     @Query("SELECT g FROM Goal g WHERE g.calendarUser.id = :userId")
     List<Goal> findGoalsByUserId(@Param("userId") Integer userId);
     
-    @Query("SELECT t FROM Task t JOIN LinkedTask lt ON t.id = lt.task.id JOIN Goal g ON lt.id = g.currentLinkTask.id WHERE g.calendarUser.id = :userId")
+    @Query("SELECT t FROM Task t JOIN LinkedTask lt ON t.id = lt.task.id JOIN Goal g ON lt.id = g.currentLinkTask.id WHERE g.calendarUser.id = :userId AND t.activeTask = true")
     Optional<Task> findCurrentTaskByUserId(@Param("userId") Integer userId);
     
     @Query("SELECT t FROM Task t JOIN LinkedTask lt ON t.id = lt.task.id JOIN Goal g ON lt.id = g.currentLinkTask.id WHERE g.calendarUser.id = :userId")
     List<Task> findAllCurrentTasksByUserId(@Param("userId") Integer userId);
     
-    @Query("SELECT t FROM Task t JOIN LinkedTask lt ON t.id = lt.task.id JOIN Goal g ON lt.id IN (g.firstLinkedTask.id, g.currentLinkTask.id, g.lastLinkedTask.id) WHERE g.calendarUser.id = :userId AND t.completed = false ORDER BY RAND() LIMIT 1")
-    Optional<Task> findRandomTaskByUserId(@Param("userId") Integer userId);
-
-    @Query("SELECT g.currentLinkTask.id FROM Goal g WHERE g.calendarUser.id = :userId")
-    Optional<Integer> findCurrentTaskIdByUserId(@Param("userId") Integer userId);
-
     @Modifying
     @Transactional
     @Query("UPDATE Goal g SET g.currentLinkTask.id = :newTaskId WHERE g.calendarUser.id = :userId")

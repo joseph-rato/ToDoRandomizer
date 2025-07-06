@@ -1,5 +1,7 @@
-package com.example.ToDoRandomizer.Service;
+package com.example.ToDoRandomizer.Repository;
 
-public interface CalendarUserRepository {
+import com.example.ToDoRandomizer.Entity.CalendarUser;
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface CalendarUserRepository extends JpaRepository<CalendarUser, Integer> {
 }

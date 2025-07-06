@@ -29,6 +29,7 @@ public class Task {
     private ExpectedTime expectedTime;
     private Duration actualTime;
     private Duration currentTime;
+    private Instant currentTimeStart;
     private String description;
     private Boolean activeTask;
     private Boolean completed;
